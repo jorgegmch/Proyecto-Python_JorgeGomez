@@ -177,6 +177,8 @@ rutas = (
         ])
 )
 
+salones = ("Artemis", "Sputnik", "Apolo")
+
 riesgos = (
     "Bajo",
     "Medio",
@@ -226,13 +228,12 @@ def menu_coordinador():
     print("\n>> Menú ADMIN <<\n")
     print("1. Registrar camper")
     print("2. Registrar trainer")
-    print("3. Gestión de rutas")
-    print("4. Módulo de matrícula")
-    print("5. Gestión de módulos y evaluación")
-    print("6. Reportes")
-    print("7. Consultas")
+    print("3. Gestión de matriculas y rutas")
+    print("4. Gestión de módulos y evaluación")
+    print("5. Reportes")
+    print("6. Consultas")
     print("0. Salir\n")
-    option_coordinador = input(">>> Ingrese una opción (0-7): ")
+    option_coordinador = input(">>> Ingrese una opción (0-6): ")
     return option_coordinador
 
 def registro_campers():
@@ -401,6 +402,12 @@ def registro_trainers():
                             "ruta_trainer" : ruta_trainer,
                             "rol_trainer" : rol_trainer
                             }
+                        areas[user_trainer] = {
+                            "trainer": f"{nombre_trainer} {apellido_trainer}",
+                            "materias": [],
+                            "campers": [],
+                            "salon" : None
+                            }
                         print("\nInformación registrada con éxito.")
                     pause()
 
@@ -478,28 +485,34 @@ def registro_trainers():
                         for i in num_espec_3:
                             if 1 <= i <= len(subtemas_3):
                                 usuarios[user_trainer]['ruta_trainer'].append(f"{tema_3} - {subtemas_3[i - 1]}")
-                    print("\nRuta asignada con éxito.")
-                    pause()
+                    print("-" * 50)
+                    
+                    if user_trainer not in areas:
+                        areas[user_trainer] = {
+                            "trainer": nombre_trainer,
+                            "materias": usuarios[user_trainer]['ruta_trainer'],
+                            "campers": [],
+                            "salon" : None
+                        }
+                        print(f"✅ Ruta creada exitosamente para el trainer {nombre_trainer}.")
+                    else:
+                        areas[user_trainer]['materias'] = usuarios[user_trainer]['ruta_trainer']
+                        print(f"✅ Ruta creada exitosamente para el trainer {nombre_trainer}.")
 
-                    for ruta in usuarios[user_trainer]['ruta_trainer']:
-                        nombre_area = f"Ruta: {ruta} | Horario: {horario_trainer} | Trainer: {nombre_trainer}"
-                        if nombre_area not in areas:
-                            areas[nombre_area] = {
-                                "ruta": ruta,
-                                "horario": horario_trainer,
-                                "trainer": nombre_trainer,
-                                "campers": []
-                            }
-                            print(f"✅ Área creada: {nombre_area}")
-                        else:
-                            print(f"❌ El área {nombre_area} ya existe.")
+                    print("\nSALONES DISPONIBLES:\n")
+                    for idx, s in enumerate(salones, 1):
+                        print(f"{idx}. {s}")
+                    num_salon = int(input("\n>>> Seleccione el salón para este trainer: "))
+                    areas[user_trainer]['salon'] = salones[num_salon - 1]
+                    print(f"\n✅ Salón asignado: {areas[user_trainer]['salon']}")
+                    pause()
 
                 case "0":
                     salir("\nVolviendo al menú principal...")
                     pause()
                     isActiveRegistroTrainer = False
                 case _:
-                    exception("\n⚠️ ERROR: Debe ingresar un número entre 0 y 2")
+                    exception("\n⚠️ ERROR: Debe ingresar un número entre 0 y 3")
         except ValueError:
             exception("\n⚠️ ERROR: Tipo de dato no válido.")
 
@@ -513,49 +526,60 @@ def gestion_rutas():
         print("-" * 50)
         print("\n>>> Asignar ruta a campers <<<\n")
 
-        cod_camper = input("\t> Número de identificación del camper: ")
-        if cod_camper not in usuarios:
-            print("\nEste número de identificación no ha sido registrado. Intente de nuevo.")
+        while True:
+            cod_camper = input("\t> Número de identificación del camper: ").strip()
+            if cod_camper in usuarios:
+                break
+            print("\n⚠️ Este número de identificación no ha sido registrado. Intente de nuevo.\n")
 
-        else:
-            print(f"\t> Camper: {usuarios[cod_camper]['nombres']} {usuarios[cod_camper]['apellidos']}\n")
-            print("-" * 25)
-            print("\nAREAS Y RUTAS DISPONIBLES:")
+        print(f"\t> Camper: {usuarios[cod_camper]['nombres']} {usuarios[cod_camper]['apellidos']}\n")
+        print("-" * 25)
+        print("\nAREAS Y RUTAS DISPONIBLES:\n")
 
-            keys_areas = list(areas.keys())
-            disponibles = []
-            for idx, area in enumerate(keys_areas, 1):
-                cupo = len(areas[area]['campers'])
-                if cupo < 33:
-                    print(f"{idx}. {area} | {cupo}/33")
-                    disponibles.append(area)
+        disponibles = []
+        for idx, (user_trainer, info) in enumerate(areas.items(), 1):
+            cupo = len(info["campers"])
+            if cupo < 33:
+                print(f"{idx}. Trainer: {info['trainer']} | Cupo: {cupo}/33")
+                print(f"\n> MATERIAS:\n" + "\n".join(info['materias']))
+                print("-" * 50)
+                disponibles.append(user_trainer)
+            else:
+                print(f"{idx}. Trainer: {info['trainer']} | ❌ Ruta llena")
+
+        if not disponibles:
+            print("\n No hay rutas con cupos disponibles.")
+            pause()
+            return
+
+        while True:
+            try:
+                num_area = int(input("\n>>> Ingrese el número del trainer al que desea asignar el camper: "))
+                if 1 <= num_area <= len(disponibles):
+                    break
                 else:
-                    print(f"{idx}. {area} | ❌ Ruta llena.")
+                    print("\n⚠️ ERROR: Opción fuera de rango. Intente de nuevo.")
+            except ValueError:
+                print("\n⚠️ ERROR: Debe ingresar un número válido. Intente de nuevo.")
 
-            if not disponibles:
-                print("\n No hay rutas con cupos disponibles.")
-                pause()
-                return
+        area_selec = disponibles[num_area - 1]
+        areas[area_selec]["campers"].append(cod_camper)
+        usuarios[cod_camper]["ruta"] = area_selec
+        usuarios[cod_camper]["estado_camper"] = estados[3]
+        usuarios[cod_camper]["salon"] = areas[area_selec]["salon"]
 
-            num_area = int(input("\n>>> Ingrese el número de la ruta que desea asignar: "))
-            if num_area < 1 or num_area > len(keys_areas):
-                print("\nERROR: Opción inválida.")
-
-            area_selec = keys_areas[num_area - 1]
-            if len(areas[area_selec]['campers']) >= 33:
-                print("\nEsta ruta no tiene cupos disponibles.")
-
-            areas[area_selec]['campers'].append(cod_camper)
-            usuarios[cod_camper]['ruta'] = area_selec
-            usuarios[cod_camper]['estado_camper'] = estados[3]
-            print(f"\n✅ El camper {usuarios[cod_camper]['nombres']} fue añadido a {area_selec}")
+        print(f"\n✅ El camper '{usuarios[cod_camper]['nombres']} {usuarios[cod_camper]['apellidos']}' fue asignado a la ruta del trainer {areas[area_selec]['trainer']}.")
+        print(f"Salón asignado: {usuarios[cod_camper]['salon']}")
         pause()
     except ValueError:
-            exception("\n⚠️ ERROR: Debe ingresar una opción de la lista. Intente de nuevo.")
+            exception("\n⚠️ Error inesperado.")
 
-def modulo_matricula():
-    pass
 def gestion_modulos_evaluacion():
+    clear_screen()
+    print("CAMPUSLANDS ADMIN")
+    print("-" * 50)
+    print("\n Calcular nota final del camper...\n")
+    
     pass
 def reportes():
     pass
@@ -584,12 +608,10 @@ def main_coordinador():
             case "3":
                 gestion_rutas()
             case "4":
-                modulo_matricula()
-            case "5":
                 gestion_modulos_evaluacion()
-            case "6":
+            case "5":
                 reportes()
-            case "7":
+            case "5":
                 consultas()
             case "0":
                 salir("\nCerrando sesión...\n")
