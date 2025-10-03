@@ -17,8 +17,7 @@ INICIO
 Opciones principales:
 
     A. Iniciar sesión
-    B. Registrarse (solo campers nuevos, los trainers y coordinadores los crea el coordinador)
-    C. Salir
+    B. Salir
 
 3. Iniciar sesión
 
@@ -91,14 +90,7 @@ Opciones principales:
 
     H. Salir (cerrar sesión y volver a login)
 
-7. Registro de Campers desde Login
-
-    Opción "Registrarse" en el login
-    Pedir datos básicos del nuevo camper
-    Crear usuario con rol = "camper"
-    Guardar en estructuras de datos y archivo JSON
-
-8. Guardado en JSON
+7. Guardado en JSON
 
     Guardar el estado actual de:
     Campers
@@ -108,7 +100,7 @@ Opciones principales:
     Matrículas
     Módulos
 
-9. Repetición del flujo
+8. Repetición del flujo
 
 Volver siempre al menú de login hasta que el usuario elija Salir.
 
@@ -123,11 +115,27 @@ def clear_screen():
 def pause():
     input("\nPresione ENTER para continuar...")
 
-def salir():
-    print("\n¡Hasta luego!")
-    print("Gracias por usar el programa.\n")
+estados = (
+    "En proceso de ingreso",
+    "Inscrito", 
+    "Aprobado", 
+    "Cursando", 
+    "Graduado", 
+    "Expulsado", 
+    "Retirado"
+    )
 
-usuarios = {}
+riesgos = (
+    "Bajo",
+    "Medio",
+    "Alto"
+)
+
+usuarios = {
+    "cordcamp2025" : {
+    "rol" : "coordinador"
+    }
+}
 rutas = {}
 areas = {}
 matriculas = []
@@ -135,35 +143,209 @@ evaluaciones = []
 
 def login():
     try:
-        while True:
-            clear_screen()
-            print("¡BIENVENIDO A CAMPUSLANDS!")
-            print("-" * 50)
-            print("\nMenú de login\n")
-            print("1. Iniciar sesión")
-            print("2. Registrarse como camper")
-            print("0. Salir\n")
-            option_login = input("Ingrese una opción (0-2): ")
-
+        clear_screen()
+        print("¡BIENVENIDO A CAMPUSLANDS!")
+        print("-" * 50)
+        print("\nMenú de login\n")
+        print("1. Iniciar sesión")
+        print("0. Salir\n")
+        option_login = input(">>> Ingrese una opción (0-1): ")
+        isActiveLogin = True
+        while isActiveLogin:
             match option_login:
                 case "1":
                     clear_screen()
                     print("CAMPUSLANDS")
-                    print("\tIniciar sesión")
                     print("-" * 50)
-
+                    print("Iniciar sesión")
                     user = input("\n>>> Ingrese su nombre de usuario: ")
-                    
-
-
+                    if user not in usuarios:
+                        print(f"\nEl usuario {user} aún no ha sido registrado")
+                    else:
+                        pass
     except ValueError:
         print("ERROR: Debe ingresar un número entre 0 y 2.")
         pause()
-
-
-
+    
 def menu_coordinador():
+    print("CAMPUSLANDS ADMIN")
+    print("-" * 50)
+    print("\n>> Menú ADMIN <<\n")
+    print("1. Registrar camper")
+    print("2. Registrar trainer")
+    print("3. Gestión de rutas")
+    print("4. Módulo de matrícula")
+    print("5. Gestión de módulos y evaluación")
+    print("6. Reportes")
+    print("7. Consultas")
+    print("0. Salir\n")
+    option_coordinador = input(">>> Ingrese una opción (0-7): ")
+    return option_coordinador
+
+def registro_camper():
+    clear_screen()
+    print("CAMPUSLANDS ADMIN")
+    print("-" * 50)
+    print("\n>> Registro de campers <<\n")
+    print("1. Registrar información")
+    print("2. Registrar nota de prueba inicial")
+    print("3. Cambiar estado")
+    print("4. Modificar riesgo")
+    print("0. Salir\n")
+    option_registro = input(">>> Ingrese una opción (0-4): ")
+    
+    isActiveRegistro = True
+    while isActiveRegistro:
+        match option_registro:
+            case "1":
+                clear_screen()
+                print("CAMPUSLANDS ADMIN")
+                print("-" * 50)
+                print("\nRegistrando información...\n")
+                cod_camper = input("\t> Número de identificación: ")
+                if cod_camper in usuarios:
+                    print("Este número de identificación ya fue registrado.")
+                else:
+                    nombres = input("\t> Nombre(s): ")
+                    apellidos = input("\t> Apellido(s): ")
+                    direccion = input("\t> Dirección: ")
+                    acudiente = input("\t> Nombre del acudiente: ")
+                    movil = input("\t> Número de teléfono movil: ")
+                    telefono = input("\t> Número de teléfono fijo: ")
+                    estado_camper = (estados[0])
+                    riesgo_camper = (riesgos[0])
+                    nota_prueba_inicio = None
+                    ruta = None
+                    calificaciones = None
+                    rol = "camper"
+                    
+                    usuarios[cod_camper] = {
+                        "nombres" : nombres,
+                        "apellidos" : apellidos,
+                        "direccion" : direccion,
+                        "acudiente" : acudiente,
+                        "movil" : movil,
+                        "telefono" : telefono,
+                        "riesgo_camper" : riesgo_camper,
+                        "estado_camper" : estado_camper,
+                        "nota_prueba_inicio" : nota_prueba_inicio,
+                        "ruta" : ruta,
+                        "calificaciones" : calificaciones,
+                        "rol" : rol
+                    }
+                    print("\nInformación registrada con éxito")
+                pause()
+                
+            case "2":
+                clear_screen()
+                print("CAMPUSLANDS ADMIN")
+                print("-" * 50)
+                print("\nRegistrando nota de prueba inicial...\n")
+                cod_camper = input("\t> Número de identificación: ")
+                if cod_camper not in usuarios:
+                    print("\nEste número de identificación no ha sido registrado.")
+                else:
+                    print(f"\t> Aspirante: {usuarios[cod_camper]['nombres']} {usuarios[cod_camper]['apellidos']}\n")
+                    nota_prueba_inicio = int(input("\n\t> Nota de prueba inicial (0-100): "))
+                    usuarios[cod_camper]["nota_prueba_inicio"] = nota_prueba_inicio
+                    if nota_prueba_inicio >= 60:
+                        usuarios[cod_camper]["estado_camper"] = estados[2]
+                        print(f"\nEl aspirante aprobó la prueba inicial. Su estado ha cambiado a '{estados[2]}'.")
+                    else:
+                        usuarios[cod_camper]["estado_camper"] = estados[0]
+                        print("\nEl aspirante no aprobó la prueba inicial.")
+                    pause()
+                    
+            case "3":
+                clear_screen()
+                print("CAMPUSLANDS ADMIN")
+                print("-" * 50)
+                print("\nCambiar estado\n")
+                cod_camper = input("\t> Número de identificación: ")
+                if cod_camper not in usuarios:
+                    print("\nEste número de identificación no ha sido registrado.")
+                else:
+                    print(f"\t> Aspirante: {usuarios[cod_camper]['nombres']} {usuarios[cod_camper]['apellidos']}\n")
+                    print("\nLista de estados:")
+                    for idx, estado in enumerate(estados, 1):
+                        print(f"{idx}. {estado}")
+                    num_estado = int(input("\n>>> Ingrese el número del nuevo estado: "))
+                    usuarios[cod_camper]["estado_camper"] = estados[num_estado - 1]
+                    print("\nEstado cambiado con éxito")
+                pause()
+            
+            case "4":
+                clear_screen()
+                print("CAMPUSLANDS ADMIN")
+                print("-" * 50)
+                print("\nModificar riesgo\n")
+                cod_camper = input("\t> Número de identificación: ")
+                if cod_camper not in usuarios:
+                    print("\nEste número de identificación no ha sido registrado.")
+                else:
+                    print(f"\t> Aspirante: {usuarios[cod_camper]['nombres']} {usuarios[cod_camper]['apellidos']}\n")
+                    print("\nLista de riesgos:")
+                    for idx, riesgo in enumerate(riesgo, 1):
+                        print(f"{idx}. {riesgo}")
+                    num_riesgo = int(input("\n>>> Ingrese el número del nuevo riesgo: "))
+                    usuarios[cod_camper]["riesgo_camper"] = riesgo[num_riesgo - 1]
+                    print("\nRiesgo modificado con éxito")
+                pause()
+                
+            case "0":
+                print("Volviendo al menú principal...")
+                pause()
+                isActiveRegistro = False
+    
+def gestion_rutas():
     pass
+def gestion_trainers():
+    pass
+def modulo_matricula():
+    pass
+def gestion_modulos_evaluacion():
+    pass
+def reportes():
+    pass
+def consultas():
+    pass
+
+def salir(msg):
+    print(msg)
+    pause()
+    isActiveCoordinador = False
+    return isActiveCoordinador
+
+def exception(msg):
+    print(msg)
+    pause()
+
+
+def main_coordinador():
+    clear_screen()
+    option_coordinador = menu_coordinador()
+    
+    isActiveCoordinador = True
+    while isActiveCoordinador:
+        match option_coordinador:
+            case "1":
+                registro_camper()
+            case "2":
+                gestion_rutas()
+            case "3":
+                gestion_trainers()
+            case "4":
+                modulo_matricula()
+            case "5":
+                gestion_modulos_evaluacion()
+            case "6":
+                reportes()
+            case "7":
+                consultas()
+            case "0":
+                salir("Cerrando sesión...")
+            case _:
+                exception("ERROR: Debe ingresar un número entre 0 y 7.")
 
 def menu_trainer():
     pass
@@ -171,11 +353,7 @@ def menu_trainer():
 def menu_camper():
     pass
 
-def main():
-    isActive = True
-    while isActive:
-        pass
+# if __name__ == "__main__":
+    # pass
 
-
-if __name__ == "__main__":
-    pass
+main_coordinador()
