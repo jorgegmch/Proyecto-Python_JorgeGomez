@@ -1,0 +1,63 @@
+{
+    "cordcamp2025": {
+        "nombres": "Jorge Alberto",
+        "apellidos": "Gomez Chaparro",
+        "rol": "coordinador"
+    },
+    "123": {
+        "nombres": "Juan David",
+        "apellidos": "Vesga Diaz",
+        "direccion": "CLL 2A 13-06",
+        "acudiente": "Silvia Diaz",
+        "movil": "3107435602",
+        "telefono": "No tiene",
+        "riesgo_camper": "Bajo",
+        "estado_camper": "Cursando",
+        "nota_prueba_inicio": null,
+        "ruta": [
+            "Fundamentos de programación (Introducción a la algoritmia, PSeInt y Python)",
+            "Programación Web (HTML, CSS y Bootstrap)",
+            "Programación formal - Java",
+            "Programación formal - JavaScript",
+            "Bases de datos - MongoDB",
+            "Backend - Express",
+            "Backend - NodeJS"
+        ],
+        "calificaciones": {
+            "Java": {
+                "nota_teoria": 60,
+                "nota_practica": 70,
+                "nota_quices": 80,
+                "nota_final": 68,
+                "estado_modulo": "Aprobado"
+            },
+            "Express": {
+                "nota_teoria": 70,
+                "nota_practica": 90,
+                "nota_quices": 50,
+                "nota_final": 80,
+                "estado_modulo": "Aprobado"
+            }
+        },
+        "rol": "camper",
+        "salon": "Sputnik"
+    },
+    "qwe": {
+        "nombres": "Juan Carlos",
+        "apellidos": "Toloza Ramirez",
+        "direccion": "CRA 33 50-20",
+        "movil": "3225638974",
+        "telefono": "No tiene",
+        "horario": "14:00 - 18:00",
+        "ruta": [
+            "Fundamentos de programación (Introducción a la algoritmia, PSeInt y Python)",
+            "Programación Web (HTML, CSS y Bootstrap)",
+            "Programación formal - Java",
+            "Programación formal - JavaScript",
+            "Bases de datos - MongoDB",
+            "Backend - Express",
+            "Backend - NodeJS"
+        ],
+        "rol": "trainer"
+    }
+}

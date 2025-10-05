@@ -1,0 +1,19 @@
+{
+    "qwe": {
+        "trainer": "Juan Carlos Toloza Ramirez",
+        "materias": [
+            "Fundamentos de programación (Introducción a la algoritmia, PSeInt y Python)",
+            "Programación Web (HTML, CSS y Bootstrap)",
+            "Programación formal - Java",
+            "Programación formal - JavaScript",
+            "Bases de datos - MongoDB",
+            "Backend - Express",
+            "Backend - NodeJS"
+        ],
+        "campers": [
+            "123",
+            "123"
+        ],
+        "salon": "Sputnik"
+    }
+}
