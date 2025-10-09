@@ -6,11 +6,11 @@ import json
 
 estados = (
     "En proceso de ingreso",
-    "Inscrito", 
-    "Aprobado", 
-    "Cursando", 
-    "Graduado", 
-    "Expulsado", 
+    "Inscrito",
+    "Aprobado",
+    "Cursando",
+    "Graduado",
+    "Expulsado",
     "Retirado"
     )
 
@@ -25,19 +25,19 @@ rutas = (
     ("Fundamentos de programación (Introducción a la algoritmia, PSeInt y Python)", []),
     ("Programación Web (HTML, CSS y Bootstrap)", []),
     ("Programación formal", [
-        "Java", 
-        "JavaScript", 
+        "Java",
+        "JavaScript",
         "C#"
         ]),
     ("Bases de datos", [
-        "MySQL", 
-        "MongoDB", 
+        "MySQL",
+        "MongoDB",
         "PostgreSQL"
         ]),
     ("Backend", [
-        "NetCore", 
-        "Spring Boot", 
-        "NodeJS", 
+        "NetCore",
+        "Spring Boot",
+        "NodeJS",
         "Express"
         ])
 )
@@ -72,6 +72,7 @@ def login():
         print("-" * 50)
         print("\nMenú de login\n")
         print("1. Iniciar sesión")
+        print("2. Trainers y rutas (test)")
         print("0. Salir\n")
         option_login = input(">>> Ingrese una opción (0-1): ").strip()
         try:
@@ -101,6 +102,10 @@ def login():
                         else:
                             print("⚠️ ID desconocido.")
                         ut.pause()
+
+                case "2":
+                    ut.clear_screen()
+                    ver_trainer_ruta()
 
                 case "0":
                     print("\n¡Gracias por usar CAMPUSLANDS!")
@@ -799,3 +804,59 @@ def guardar_datos():
             json.dump(evaluaciones, f, ensure_ascii=False, indent=4)
     except Exception:
         print(f"⚠️ Error al guardar evaluaciones.")
+
+
+def ver_trainer_ruta():
+    ut.clear_screen
+    print("CAMPUSLANDS ADMIN")
+    print("-" * 50)
+    print("Visualizar trainers y rutas")
+    reporte_trainers_rutas = {
+    "id trainer" : {
+        "1999" : {
+            "nombres" : "Jorge Gomez",
+            "ruta" : "NodeJS (C#, MySQL, PostgreSQL)",
+            "salon" : "Sputnik",
+            "horario" : "06:00 - 10:00",
+            "rol" : "trainer"
+        }},
+    "id trainer" : {
+        "2000" : {
+            "nombres" : "Juan David Vesga",
+            "ruta" : "Java (JavaScript, MySQL, MongoDB)",
+            "salon" : "Artemis",
+            "horario" : "06:00 - 10:00",
+            "rol" : "trainer"
+        }},
+    "id trainer" : {
+        "2001" : {
+            "nombres" : "Brayan Espinosa",
+            "ruta" : "NetCore (JavaScript, MongoDB, PostgreSQL)",
+            "salon" : "Apolo",
+            "horario" : "10:00 - 14:00",
+            "rol" : "trainer"
+        }},
+    "id trainer" : {
+        "2002" : {
+            "nombres" : "Caroline Gomez",
+            "ruta" : "Spring Boot (Java, PostgreSQL, MySQL)",
+            "salon" : "Sputnik",
+            "horario" : "10:00 - 14:00",
+            "rol" : "trainer"
+        }},
+    "id trainer" : {
+        "2003" : {
+            "nombres" : "Silvia Silva",
+            "ruta" : "Express (C#, MongoDB, MySQL)",
+            "salon" : "Artemis",
+            "horario" : "14:00 - 18:00",
+            "rol" : "trainer"
+        }}
+    }
+    if not reporte_trainers_rutas:
+        print("No hay trainers registrados a la fecha.")
+    else:
+        print("TRAINERS DISPONIBLES Y RUTAS ASIGNADAS")
+        for trainer, info in reporte_trainers_rutas:
+            print(f"Trainer: {info['nombre']} | Ruta: {info['ruta']} - Salón: {info['salon']}")
+    ut.pause()
